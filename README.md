@@ -46,8 +46,9 @@ Introduce your projects by taking a screenshot or a gif. Try to tell visitors a 
 
 ### Built With
 
-- [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- [Tailwind](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev)
+- [Tailwind](https://tailwindcss.com)
+- [Svelte](https://svelte.dev)
 
 ## Features
 
