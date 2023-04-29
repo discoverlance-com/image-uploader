@@ -7,7 +7,7 @@
 
     <p class="text-[10px] font-[500] leading-[15px] text-primary-gray-300 text-center">File should be Jpeg, Png,...</p>
 
-    <form name="image-uploads" method="POST" data-netlify="true" class="space-y-6">
+    <form method="POST" enctype="multipart/form-data"  class="space-y-6">
         <div class="h-[218.9px] bg-primary-gray-50 rounded-xl border-secondary-blue-100 border border-dashed">
             <div class="flex items-center justify-center mt-9">
                 <img src={uploadImage} alt="Upload File"  />
