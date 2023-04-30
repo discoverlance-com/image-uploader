@@ -23,7 +23,7 @@
 		const data = new FormData(submitForm);
 		uploading = true;
 
-		const response = await fetch($page.url.href + '?upload', {
+		const response = await fetch($page.url.href, {
 			method: 'POST',
 			body: data,
 			headers: {
@@ -61,13 +61,7 @@
 			<p>{form?.message}</p>
 		</div>
 	{/if}
-	<form
-		method="POST"
-		action="/?upload"
-		enctype="multipart/form-data"
-		class="space-y-6"
-		bind:this={submitForm}
-	>
+	<form method="POST" enctype="multipart/form-data" class="space-y-6" bind:this={submitForm}>
 		{#if uploading && !imageUrl}
 			<div transition:fly={{ y: -200, duration: 1000 }}>
 				<ImageUploaderLoading />

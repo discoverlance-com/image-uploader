@@ -5,7 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { env } from '$env/dynamic/private';
 
 export const actions = {
-	upload: async ({ request, fetch }) => {
+	default: async ({ request, fetch }) => {
 		const data = await request.formData();
 		const file = data.get('file');
 
@@ -42,7 +42,5 @@ export const actions = {
 			console.log(error);
 			return fail(400, { error: true, message: 'Error uploading file. Please try again later.' });
 		}
-
-		return { success: true, image: '' };
 	}
 } satisfies Actions;
