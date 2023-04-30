@@ -9,6 +9,7 @@
 	import { applyAction, deserialize } from '$app/forms';
 	import type { ActionData } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { page } from '$app/stores';
 
 	// indicate that the file is being uploaded
 	let uploading = false;
@@ -22,7 +23,7 @@
 		const data = new FormData(submitForm);
 		uploading = true;
 
-		const response = await fetch('/?upload', {
+		const response = await fetch($page.url.href + '?upload', {
 			method: 'POST',
 			body: data,
 			headers: {
