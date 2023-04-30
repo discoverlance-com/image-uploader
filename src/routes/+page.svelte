@@ -39,6 +39,7 @@
 			await invalidateAll();
 		}
 		uploading = false;
+		imageUrl = result.data.image_url;
 		applyAction(result);
 	}
 
@@ -114,7 +115,7 @@
 		{/if}
 	</form>
 	{#if imageUrl}
-		<div transition:fly={{ y: -100, duration: 2000 }}>
+		<div transition:fly={{ y: -200, duration: 2000 }}>
 			<ImageUploaderSuccess {imageUrl} />
 		</div>
 	{/if}
