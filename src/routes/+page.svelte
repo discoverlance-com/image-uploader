@@ -32,13 +32,13 @@
 		});
 
 		const result: ActionResult = deserialize(await response.text());
+		console.log({ result });
 
 		if (result.type === 'success') {
 			// re-run all `load` functions, following the successful update
 			await invalidateAll();
 		}
 		uploading = false;
-
 		applyAction(result);
 	}
 

@@ -37,8 +37,7 @@ export const actions = {
 			);
 
 			const response = await request.json();
-			console.log({ response });
-			return { success: true };
+			return { success: true, image_url: response.secure_url };
 		} catch (error) {
 			console.log(error);
 			return fail(400, { error: true, message: 'Error uploading file. Please try again later.' });
