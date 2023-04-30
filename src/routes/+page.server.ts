@@ -22,13 +22,14 @@ export const actions = {
 
 		const formData = new FormData();
 		formData.append('file', file);
-		formData.append('timestamp', timestamp);
 		formData.append('api_key', env.CLOUDINARY_API_KEY);
+		formData.append('timestamp', timestamp);
 		formData.append('signature', signature);
+		formData.append('folder', folder);
 
 		try {
 			const request = await fetch(
-				`https://api.cloudinary.com/v1_1/image/${env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+				`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`,
 				{
 					method: 'POST',
 					body: formData
