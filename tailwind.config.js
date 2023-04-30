@@ -6,7 +6,8 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['Poppins', ...defaultTheme.fontFamily.sans]
+				sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+				'noto-sans': ['Noto Sans', ...defaultTheme.fontFamily.sans]
 			},
 			boxShadow: {
 				default: '0 4px 12px 0 rgb(0 0 0 / 0.1)'
@@ -22,6 +23,19 @@ export default {
 				'secondary-blue': {
 					100: '#97BEF4',
 					200: '#2F80ED'
+				}
+			},
+			animation: {
+				'slide-left-right': 'slide-left-right 1.5s linear infinite'
+			},
+			keyframes: {
+				'slide-left-right': {
+					'0%': {
+						left: '0px'
+					},
+					'100%': {
+						left: '340px'
+					}
 				}
 			}
 		}
