@@ -5,7 +5,7 @@
 	import uploadImage from '$lib/assets/image.svg';
 
 	import { fly } from 'svelte/transition';
-	import { invalidateAll, goto } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { applyAction, deserialize } from '$app/forms';
 	import type { ActionData } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
@@ -15,21 +15,14 @@
 	// image to be displayed to the user
 	let imageUrl = '';
 	let submitForm: HTMLFormElement;
-	let submitButton: HTMLButtonElement;
 
 	export let form: ActionData;
 
-	async function handleSubmit(
-		event: Event & {
-			readonly submitter: HTMLElement | null;
-		} & {
-			currentTarget: EventTarget & HTMLFormElement;
-		}
-	) {
-		const data = new FormData(this);
+	async function handleSubmit() {
+		const data = new FormData(submitForm);
 		uploading = true;
 
-		const response = await fetch(this.action, {
+		const response = await fetch('/?upload', {
 			method: 'POST',
 			body: data,
 			headers: {
@@ -73,10 +66,14 @@
 		enctype="multipart/form-data"
 		class="space-y-6"
 		bind:this={submitForm}
-		on:submit|preventDefault={handleSubmit}
 	>
-		{#if !imageUrl}
-			<div transition:fly={{ y: -100, duration: 500 }}>
+		{#if uploading && !imageUrl}
+			<div transition:fly={{ y: -200, duration: 1000 }}>
+				<ImageUploaderLoading />
+			</div>
+		{/if}
+		{#if !imageUrl && !uploading}
+			<div transition:fly={{ y: -200, duration: 500 }}>
 				<div
 					class="bg-white rounded-xl w-[402px] h-[469px] px-8 py-[36px] space-y-6 shadow-default"
 				>
@@ -112,7 +109,7 @@
 								class="hidden"
 								id="upload-file"
 								accept="image/*"
-								on:change={handleFileChange}
+								on:change={handleSubmit}
 							/>
 							<span class="font-medium font-noto-sans">Choose a file</span>
 						</label>
@@ -120,14 +117,9 @@
 				</div>
 			</div>
 		{/if}
-		{#if uploading}
-			<div transition:fly={{ y: -100, duration: 1000 }}>
-				<ImageUploaderLoading />
-			</div>
-		{/if}
 	</form>
 	{#if imageUrl}
-		<div transition:fly={{ y: -100, duration: 1000 }}>
+		<div transition:fly={{ y: -100, duration: 2000 }}>
 			<ImageUploaderSuccess {imageUrl} />
 		</div>
 	{/if}
