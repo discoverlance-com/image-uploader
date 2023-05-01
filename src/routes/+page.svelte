@@ -16,11 +16,18 @@
 	// image to be displayed to the user
 	let imageUrl = '';
 	let submitForm: HTMLFormElement;
+	let dropZoneElement: HTMLDivElement;
 
 	export let form: ActionData;
 
-	async function handleSubmit() {
-		const data = new FormData(submitForm);
+	async function handleSubmit(file?: File | undefined) {
+		let data: FormData;
+		if (file) {
+			data = new FormData();
+			data.append('file', file);
+		} else {
+			data = new FormData(submitForm);
+		}
 		uploading = true;
 
 		const response = await fetch($page.url.href, {
@@ -32,7 +39,6 @@
 		});
 
 		const result: ActionResult = deserialize(await response.text());
-		console.log({ result });
 
 		if (result.type === 'success') {
 			// re-run all `load` functions, following the successful update
@@ -43,8 +49,54 @@
 		applyAction(result);
 	}
 
-	function handleFileChange() {
-		submitForm.submit();
+	async function handleClickSubmit() {
+		await handleSubmit();
+	}
+
+	async function handleDropSubmit(file: File) {
+		await handleSubmit(file);
+	}
+
+	async function handleDragDrop(
+		event: DragEvent & {
+			currentTarget: EventTarget & HTMLDivElement;
+		}
+	) {
+		const data = event.dataTransfer;
+		const files = data?.files;
+		if (files && files.length > 0) {
+			const file = files[0];
+			if (file && file.type.includes('image')) {
+				data.dropEffect = 'copy';
+				event.currentTarget.classList.add('border-green-500');
+				event.currentTarget.classList.remove('border-red-500');
+				// submit form with file
+				await handleDropSubmit(file);
+			} else {
+				data.dropEffect = 'none';
+				event.currentTarget.classList.add('border-red-500');
+				event.currentTarget.classList.remove('border-green-500');
+			}
+		}
+	}
+
+	function handleDragOver(
+		event: DragEvent & {
+			currentTarget: EventTarget & HTMLDivElement;
+		}
+	) {
+		//
+	}
+
+	function handleDragEnter(
+		event: DragEvent & {
+			currentTarget: EventTarget & HTMLDivElement;
+		}
+	) {
+		const data = event.dataTransfer;
+		if (data && data.types.includes('Files')) {
+			event.currentTarget.classList.add('border-2');
+		}
 	}
 </script>
 
@@ -71,33 +123,37 @@
 		{#if !imageUrl && !uploading}
 			<div transition:fly={{ y: -200, duration: 500 }}>
 				<div
-					class="bg-white rounded-xl w-[402px] h-[469px] px-8 py-[36px] space-y-6 shadow-default"
+					class="h-[469px] w-[402px] space-y-6 rounded-xl bg-white px-8 py-[36px] shadow-default"
 				>
-					<h1 class="font-medium text-lg leading-[27px] text-center text-primary-gray-400">
+					<h1 class="text-center text-lg font-medium leading-[27px] text-primary-gray-400">
 						Upload Your Image
 					</h1>
 
-					<p class="text-[10px] font-medium leading-[15px] text-primary-gray-300 text-center">
+					<p class="text-center text-[10px] font-medium leading-[15px] text-primary-gray-300">
 						File should be Jpeg, Png,...
 					</p>
 
 					<div
-						class="h-[218.9px] bg-primary-gray-50 rounded-xl border-secondary-blue-100 border border-dashed"
+						bind:this={dropZoneElement}
+						on:drop|preventDefault|stopPropagation={handleDragDrop}
+						on:dragover|preventDefault={handleDragOver}
+						on:dragenter|preventDefault={handleDragEnter}
+						class="h-[218.9px] rounded-xl border border-dashed border-secondary-blue-100 bg-primary-gray-50"
 					>
 						<div class="flex justify-center items-center mt-9">
 							<img src={uploadImage} alt="Upload File" />
 						</div>
-						<p class="text-center text-primary-gray-100 text-xs leading-[18px] mt-9">
+						<p class="mt-9 text-center text-xs leading-[18px] text-primary-gray-100">
 							Dray & Drop your image here
 						</p>
 					</div>
 
-					<p class="text-center text-primary-gray-100 text-xs leading-[18px]">Or</p>
+					<p class="text-center text-xs leading-[18px] text-primary-gray-100">Or</p>
 
 					<div class="flex justify-center">
 						<label
 							for="upload-file"
-							class="bg-secondary-blue-200 cursor-pointer text-white h-8 w-[101px] rounded-lg text-[12px] flex items-center justify-center hover:bg-secondary-blue-200/90"
+							class="flex h-8 w-[101px] cursor-pointer items-center justify-center rounded-lg bg-secondary-blue-200 text-[12px] text-white hover:bg-secondary-blue-200/90"
 						>
 							<input
 								name="file"
@@ -105,7 +161,7 @@
 								class="hidden"
 								id="upload-file"
 								accept="image/*"
-								on:change={handleSubmit}
+								on:change={handleClickSubmit}
 							/>
 							<span class="font-medium font-noto-sans">Choose a file</span>
 						</label>
