@@ -2,9 +2,8 @@
 	import ImageUploader from '../components/ImageUploader.svelte';
 	import ImageUploaderLoading from '../components/ImageUploaderLoading.svelte';
 	import ImageUploaderSuccess from '../components/ImageUploaderSuccess.svelte';
-	import uploadImage from '$lib/assets/image.svg';
 
-	import { fly } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { invalidateAll } from '$app/navigation';
 	import { applyAction, deserialize } from '$app/forms';
 	import type { ActionData } from './$types';
@@ -67,19 +66,19 @@
 		<div
 			class="p-2 mb-4 text-sm text-white rounded-lg bg-secondary-blue-100"
 			role="alert"
-			transition:fly={{ y: -100, duration: 1000 }}
+			transition:slide|local
 		>
 			<p>{form?.message}</p>
 		</div>
 	{/if}
 	<form method="POST" enctype="multipart/form-data" class="space-y-6" bind:this={submitForm}>
 		{#if uploading && !imageUrl}
-			<div transition:fly={{ y: -200, duration: 1000 }}>
+			<div transition:slide|local>
 				<ImageUploaderLoading />
 			</div>
 		{/if}
 		{#if !imageUrl && !uploading}
-			<div transition:fly={{ y: -200, duration: 500 }}>
+			<div transition:slide|local>
 				<ImageUploader
 					{dropZoneElement}
 					on:clickSubmit={handleClickSubmit}
@@ -89,7 +88,7 @@
 		{/if}
 	</form>
 	{#if imageUrl}
-		<div transition:fly={{ y: -200, duration: 2000 }}>
+		<div transition:slide|local>
 			<ImageUploaderSuccess {imageUrl} />
 		</div>
 	{/if}
