@@ -59,12 +59,22 @@
 
 <svelte:head>
 	<title>My Devchallenge - Image Uploader</title>
+	<meta name="description" content="Upload any image and get a url to access it." />
+	<meta property="og:title" content="My Devchallenge - Image Uploader" />
+	<meta property="og:site_name" content="Image Uploader" />
+	<meta property="og:url" content="https://my-devchallenge-image-uploader.netlify.app" />
+	<meta property="og:description" content="Upload any image and get a url to access it." />
+	<meta property="og:type" content="website" />
+	<meta
+		property="og:image"
+		content="https://my-devchallenge-image-uploader.netlify.app/image.svg"
+	/>
 </svelte:head>
 
 <div>
 	{#if form?.error}
 		<div
-			class="p-2 mb-4 text-sm text-white rounded-lg bg-secondary-blue-100"
+			class="mb-4 rounded-lg bg-secondary-blue-100 p-2 text-sm text-white"
 			role="alert"
 			transition:slide|local
 		>
